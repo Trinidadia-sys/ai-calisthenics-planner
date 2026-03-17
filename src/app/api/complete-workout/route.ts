@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServerClient } from '../../../../lib/supabaseServer';
 import { supabaseAdmin } from '../../../../lib/supabaseAdmin';
 
+// Force dynamic rendering to prevent build-time data collection
+export const dynamic = 'force-dynamic';
+
 async function getUser() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) return null;
-  return user;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) return null;
+    return user;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function GET(request: NextRequest) {

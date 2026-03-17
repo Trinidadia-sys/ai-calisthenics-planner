@@ -109,14 +109,14 @@ export class WorkoutPlanGenerator {
     try {
       // Include goal in the plan title if one was selected
       const goalSuffix = resolvedGoal ? ` — ${resolvedGoal}` : '';
-      const { data: plan, error: planError } = await supabaseAdmin
+      const { data: plan, error: planError } = await (supabaseAdmin
         .from('workout_plans')
         .insert({
           user_id: userId,
           title: `${request.experience_level} Calisthenics Plan - ${request.training_frequency} days/week${goalSuffix}`,
         })
         .select()
-        .single();
+        .single() as any);
 
       if (planError || !plan) {
         console.error('Error creating workout plan:', planError);
